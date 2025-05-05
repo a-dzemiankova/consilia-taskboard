@@ -1,0 +1,40 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Consilia</title>
+    <link rel="stylesheet" href="{% static 'tasks/css/styles.css' %}">
+    <link rel="shortcut icon" href="{% static 'tasks/images/icon-removebg.png' %}" type="image/x-icon"/>
+</head>
+
+
+
+<body>
+  <div class="page-container">
+ <header>
+        <div class="site-name">
+          <a href="{% url 'index' %}" class="logo-link">
+            <img src="{% static 'tasks/images/icon-removebg.png' %}" alt="Logo" class="logo">
+          </a>
+          <span class="slogan">Consilia – your masterplan, one task at a time</span>
+        </div>
+
+        <a href="#" class="logout">log out</a>
+    </header>
+
+    <main class="content">
+      {% block content %}
+      {% endblock %}
+    </main>
+
+    <footer class="site-footer">
+      <p>© 2025 Consilia Ltd — From chaos to conquest via questionable code choices</p>
+    </footer>
+  </div>
+</body>
+
+
+
+
+</html>

@@ -1,0 +1,40 @@
+{% extends 'base.html' %}
+{% block content %}
+
+    <section class="dashboard">
+        <div class="greeting">Hello, user!</div>
+        <div class="date-box">date</div>
+
+        <div class="columns">
+            <div class="column">
+                <h2>To Do</h2>
+                <ul>
+                    <li>Task 1</li>
+                    <li>Task 2</li>
+                    <li>Task 3</li>
+                    <li>Task 4</li>
+                </ul>
+            </div>
+            <div class="column">
+                <h2>In progress</h2>
+                <ul>
+                    <li>Task A</li>
+                    <li>Task B</li>
+                    <li>Task C</li>
+                    <li>Task D</li>
+                </ul>
+            </div>
+            <div class="column">
+                <h2>Done</h2>
+                <ul>
+                    <li>Task X</li>
+                    <li>Task Y</li>
+                    <li>Task Z</li>
+                    <li>Task W</li>
+                </ul>
+            </div>
+        </div>
+
+        <a href="{% url 'add_task' %}" class="add-task">Add Task</a>
+    </section>
+    {% endblock %}
