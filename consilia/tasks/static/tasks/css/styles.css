@@ -100,7 +100,9 @@ html, body {
 }
 
 .content {
-    flex: 1; /* Pushes footer down */
+    flex: 1;
+    margin-left: 30px;
+    margin-bottom: 20px;
 }
 
 /* Optional footer styling */
@@ -108,7 +110,7 @@ html, body {
     padding: 20px;
     text-align: center;
     font-size: 0.9rem;
-    color: #a0e8d0;
+    color: #899491;
     border-top: 1px solid #ddd;
     background-color: #f9f9f9;
 }

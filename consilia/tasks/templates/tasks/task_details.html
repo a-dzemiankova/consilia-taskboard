@@ -1,9 +1,19 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<p>{{ task.title  }}</p>
+
+<p><strong>{{ task.title  }}</strong></p>
+    <br>
 <p>{{ task.content }}</p>
 
-    <a href="{% url 'edit_task' pk=task.pk %}">Edit task</a>
+
+<form action="{% url 'edit_task' pk=task.pk %}" method="get" style="display:inline;">
+    <button type="submit">Edit</button>
+</form>
+
+    <form action="{% url 'delete_task' pk=task.pk %}" method="get" style="display:inline;">
+    <button type="submit">Delete</button>
+</form>
+
 
 {% endblock %}
