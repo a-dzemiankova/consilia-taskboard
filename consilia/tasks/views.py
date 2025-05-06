@@ -1,5 +1,5 @@
 from django.http import HttpResponse
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 
 from .forms import TaskForm
 from .models import Tasks
@@ -28,3 +28,15 @@ def task_details(request, pk):
     return render(request, 'tasks/task_details.html', context={'task': task})
 
 
+def edit_task(request, pk):
+    task = get_object_or_404(Tasks, pk=pk)
+
+    if request.method == 'POST':
+        form = TaskForm(request.POST, instance=task)
+        if form.is_valid():
+            form.save()
+            return redirect('index')
+    else:
+        form = TaskForm(instance=task)
+
+    return render(request, 'tasks/edit_task.html', {'form': form, 'task': task})

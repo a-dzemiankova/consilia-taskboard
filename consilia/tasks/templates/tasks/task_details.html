@@ -4,4 +4,6 @@
 <p>{{ task.title  }}</p>
 <p>{{ task.content }}</p>
 
+    <a href="{% url 'edit_task' pk=task.pk %}">Edit task</a>
+
 {% endblock %}
