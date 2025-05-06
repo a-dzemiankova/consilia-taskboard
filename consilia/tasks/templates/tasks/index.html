@@ -8,30 +8,27 @@
         <div class="columns">
             <div class="column">
                 <h2>To Do</h2>
-                <ul>
-                    <li>Task 1</li>
-                    <li>Task 2</li>
-                    <li>Task 3</li>
-                    <li>Task 4</li>
-                </ul>
+                {% for task in to_do %}
+                    <ul>
+                        <li><a href="{% url 'task_details' pk=task.pk %}">{{ task.title }}</a></li>
+                    </ul>
+                    {% endfor %}
             </div>
             <div class="column">
                 <h2>In progress</h2>
-                <ul>
-                    <li>Task A</li>
-                    <li>Task B</li>
-                    <li>Task C</li>
-                    <li>Task D</li>
-                </ul>
+                {% for task in in_progress %}
+                    <ul>
+                        <li><a href="{% url 'task_details' pk=task.pk %}">{{ task.title }}</a></li>
+                    </ul>
+                    {% endfor %}
             </div>
             <div class="column">
                 <h2>Done</h2>
-                <ul>
-                    <li>Task X</li>
-                    <li>Task Y</li>
-                    <li>Task Z</li>
-                    <li>Task W</li>
-                </ul>
+                {% for task in done %}
+                    <ul>
+                        <li><a href="{% url 'task_details' pk=task.pk %}">{{ task.title }}</a></li>
+                    </ul>
+                    {% endfor %}
             </div>
         </div>
 
