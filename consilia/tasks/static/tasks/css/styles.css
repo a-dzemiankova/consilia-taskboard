@@ -115,3 +115,13 @@ html, body {
     background-color: #f9f9f9;
 }
 
+a {
+    text-decoration: none;
+    color: #186ba1;  /* Пример синего цвета */
+    transition: color 0.3s ease, transform 0.3s ease;
+}
+
+a:hover {
+    color: #2ecc71;  /* Зелёный при наведении */
+
+}

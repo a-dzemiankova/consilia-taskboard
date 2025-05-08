@@ -4,7 +4,97 @@
 <form method="post">
     {% csrf_token %}
     {{ form.as_p }}
-    <button class="add-task" type="submit">Add Task</button>
+    {% if formset %}
+        <table>
+    {% for form in formset %}
+      <tr>
+      <td>{{ form.id }}</td>
+          <td>{{ form.description.label_tag }}
+              {{ form.description }}</td>
+          <td>{{ form.is_done.label_tag }}
+              {{ form.is_done }}</td>
+          <td><label for="{{ form.DELETE.id_for_label }}">Delete</label>
+              {{ form.DELETE }}</td>
+      </tr>
+    {% endfor %}
+  </table>
+    {% endif %}
+
+<!-- Шаблон одной формы подзадачи (изначально скрыт) -->
+<div id="empty-form-template" style="display: none;">
+  <div class="subtask-form" style="display: flex; align-items: flex-start; gap: 10px; margin-bottom: 10px;">
+      <div>{{ formset.empty_form.id }}</div>
+    <div>
+      <label>{{ formset.empty_form.description.label }}</label>
+      {{ formset.empty_form.description }}
+    </div>
+    <div>
+      <label>{{ formset.empty_form.is_done.label }}</label>
+      {{ formset.empty_form.is_done }}
+    </div>
+    <button type="button" class="remove-subtask-btn" style="margin-top: 1px;">❌ Remove</button>
+  </div>
+</div>
+
+    <div id="subtasks-formset">
+        {{ formset.management_form }}
+        <!-- подзадачи будут добавляться сюда -->
+    </div>
+
+    <button type="button" id="add-subtask-btn" style="height: 2.5em;">➕ Add subtask</button>
+    <button type="submit" style="height: 2.5em;">✅ Save</button>
+
 </form>
+    <br>
+        <a href="{% url 'index' %}">Cancel</a>
+
+
+
+
+
+
+
+<script>
+    const addBtn = document.getElementById('add-subtask-btn');
+    const formsetDiv = document.getElementById('subtasks-formset');
+    const totalFormsInput = document.querySelector('[name="subtasks-TOTAL_FORMS"]');
+    const emptyFormTemplate = document.querySelector('#empty-form-template').innerHTML;
+
+    addBtn.addEventListener('click', () => {
+        let formCount = parseInt(totalFormsInput.value);
+        let newFormHtml = emptyFormTemplate.replace(/__prefix__/g, formCount);
+        formsetDiv.insertAdjacentHTML('beforeend', newFormHtml);
+        totalFormsInput.value = formCount + 1;
+    });
+
+    // Event delegation for removing subtasks
+    formsetDiv.addEventListener('click', function(event) {
+        if (event.target.classList.contains('remove-subtask-btn')) {
+            const formToRemove = event.target.closest('.subtask-form');
+            formToRemove.remove();
+            updateFormIndices();
+        }
+    });
+
+    function updateFormIndices() {
+        const forms = formsetDiv.querySelectorAll('.subtask-form');
+        forms.forEach((form, index) => {
+            form.querySelectorAll('input, select, textarea, label').forEach(el => {
+                if (el.name) {
+                    el.name = el.name.replace(/subtasks-\d+-/, `subtasks-${index}-`);
+                }
+                if (el.id) {
+                    el.id = el.id.replace(/subtasks-\d+-/, `subtasks-${index}-`);
+                }
+                if (el.htmlFor) {
+                    el.htmlFor = el.htmlFor.replace(/subtasks-\d+-/, `subtasks-${index}-`);
+                }
+            });
+        });
+        totalFormsInput.value = forms.length;
+    }
+</script>
+
+
 
 {% endblock %}

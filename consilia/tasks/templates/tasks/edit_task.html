@@ -1,9 +1,11 @@
 {% extends 'base.html' %}
 {% block content %}
-    <h2>Edit Task: {{ task.title }}</h2>
+    <h2>Edit Task: "{{ task.title }}"</h2>
 <form method="post">
     {% csrf_token %}
     {{ form.as_p }}
+        <p>{{ formset.as_p }}</p>
+
     <button class="basic-button" type="submit">Save Changes</button>
 </form>
 

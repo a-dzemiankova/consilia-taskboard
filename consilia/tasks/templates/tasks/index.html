@@ -2,12 +2,12 @@
 {% block content %}
 
     <section class="dashboard">
-        <div class="greeting">Hello, user!</div>
-        <div class="date-box">date</div>
+        <div class="greeting">🙋 Hello, user!</div>
+        <div class="date-box">🗓️{{ date }}</div>
 
         <div class="columns">
             <div class="column">
-                <h2>To Do</h2>
+                <h2>🛤️ To Do</h2>
                 {% for task in to_do %}
                     <ul>
                         <li><a href="{% url 'task_details' pk=task.pk %}">{{ task.title }}</a></li>
@@ -15,7 +15,7 @@
                     {% endfor %}
             </div>
             <div class="column">
-                <h2>In progress</h2>
+                <h2>🎢 In progress</h2>
                 {% for task in in_progress %}
                     <ul>
                         <li><a href="{% url 'task_details' pk=task.pk %}">{{ task.title }}</a></li>
@@ -23,7 +23,7 @@
                     {% endfor %}
             </div>
             <div class="column">
-                <h2>Done</h2>
+                <h2>🚀 Done</h2>
                 {% for task in done %}
                     <ul>
                         <li><a href="{% url 'task_details' pk=task.pk %}">{{ task.title }}</a></li>
@@ -32,6 +32,6 @@
             </div>
         </div>
 
-        <a href="{% url 'add_task' %}" class="add-task">Add Task</a>
+        <a href="{% url 'add_task' %}" class="add-task">➕ Add Task</a>
     </section>
     {% endblock %}

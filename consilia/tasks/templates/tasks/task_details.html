@@ -2,9 +2,20 @@
 
 {% block content %}
 
-<p><strong>{{ task.title  }}</strong></p>
+<p><strong>✏️{{ task.title  }}</strong></p>
     <br>
-<p>{{ task.content }}</p>
+<p>📋{{ task.content }}</p>
+    <br>
+    {% if subtasks %}
+        <p>📌Details:</p>
+    {% for subtask in subtasks %}
+        {% if subtask.is_done %}
+        <ul>✳️{{ subtask.description}}</ul>
+        {% else %}
+        <ul>🔄 {{ subtask.description}}</ul>
+        {% endif %}
+    {% endfor %}
+    {% endif %}
 
 
 <form action="{% url 'edit_task' pk=task.pk %}" method="get" style="display:inline;">
@@ -14,6 +25,8 @@
     <form action="{% url 'delete_task' pk=task.pk %}" method="get" style="display:inline;">
     <button type="submit">Delete</button>
 </form>
+
+    <a href="{% url 'index' %}" style="display:block; margin-top: 20px;">Back to homepage</a>
 
 
 {% endblock %}
