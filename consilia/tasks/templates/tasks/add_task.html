@@ -77,7 +77,7 @@
         if (event.target.classList.contains('remove-subtask-btn')) {
             const formToRemove = event.target.closest('.subtask-form');
             formToRemove.remove();
-            updateFormIndices();
+            {#updateFormIndices();#}
         }
     });
 
