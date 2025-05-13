@@ -4,29 +4,46 @@ from django.forms import inlineformset_factory
 from django.http import HttpResponse
 from django.shortcuts import render, redirect, get_object_or_404
 
-from .forms import TaskForm, SubtaskFormSet, SubtaskForm
+from .forms import TaskForm, SubtaskForm
 from .models import Tasks, Subtasks
 
-
-def index(request):
+def get_data():
     to_do = Tasks.objects.filter(status=Tasks.Status.TODO)
     in_progress = Tasks.objects.filter(status=Tasks.Status.IN_PROGRESS)
     done = Tasks.objects.filter(status=Tasks.Status.DONE)
     date = datetime.today().strftime('%d.%m.%Y')
-    return render(request, 'tasks/index.html', context={'to_do': to_do, 'in_progress': in_progress, 'done': done, 'date': date})
+    data = {'to_do': to_do, 'in_progress': in_progress, 'done': done, 'date': date}
+    return data
+
+
+def index(request):
+    return render(request, 'tasks/index.html', context=get_data())
 
 
 def add_task(request):
+    SubtaskFormSet = inlineformset_factory(
+        Tasks, Subtasks,
+        form=SubtaskForm,
+        extra=0,
+        can_delete=False
+    )
     if request.method == 'POST':
         form = TaskForm(request.POST)
-        formset = SubtaskFormSet(request.POST)
-        if form.is_valid() and formset.is_valid():
-            task = form.save()
-            subtasks = formset.save(commit=False)
-            for subtask in subtasks:
-                subtask.task = task
-                subtask.save()
-            return redirect('index')
+        if form.is_valid():
+            task = form.save(commit=False)  # ещё не сохраняем сабтаски
+            formset = SubtaskFormSet(request.POST, instance=task)
+            if formset.is_valid():
+                task.save()  # сохраняем только после того, как formset валиден
+                subtasks = formset.save(commit=False)
+                for subtask in subtasks:
+                    subtask.task = task
+                    subtask.save()
+                return redirect('index')
+            else:
+                print('formset errors:', formset.errors)
+        else:
+            formset = SubtaskFormSet(request.POST)  # для повторного отображения с ошибками
+            print('form errors:', form.errors)
     else:
         form = TaskForm()
         formset = SubtaskFormSet()
@@ -55,6 +72,9 @@ def edit_task(request, pk):
             form.save()
             formset.save()
             return redirect('task_details', pk=task.pk)
+        else:
+            print('something is wrong')
+            print(f"form:{form.errors}, formset:{formset.errors}")
 
     else:
         form = TaskForm(instance=task)
@@ -70,4 +90,10 @@ def delete_task(request, pk):
     else:
         return render(request, 'tasks/delete_task.html', {'task': task})
 
+
+def change_status(pk):
+    task = get_object_or_404(Tasks, pk=pk)
+    if task.status < 2:
+        task.status += 1
+        return redirect('index')
 

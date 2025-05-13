@@ -3,6 +3,7 @@
 {% block content %}
 <form method="post">
     {% csrf_token %}
+    {{ form.non_field_errors }}
     {{ form.as_p }}
     {% if formset %}
         <table>
@@ -10,9 +11,13 @@
       <tr>
       <td>{{ form.id }}</td>
           <td>{{ form.description.label_tag }}
-              {{ form.description }}</td>
+              {{ form.description }}
+              {{ form.description.errors }}
+          </td>
           <td>{{ form.is_done.label_tag }}
-              {{ form.is_done }}</td>
+              {{ form.is_done }}
+              {{ form.is_done.errors }}
+          </td>
           <td><label for="{{ form.DELETE.id_for_label }}">Delete</label>
               {{ form.DELETE }}</td>
       </tr>

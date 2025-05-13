@@ -22,6 +22,3 @@ class SubtaskForm(forms.ModelForm):
         labels = {'description': 'Subtask', 'is_done': 'Done'}
 
 
-
-
-SubtaskFormSet = inlineformset_factory(Tasks, Subtasks, form=SubtaskForm, extra=0, can_delete=False)
