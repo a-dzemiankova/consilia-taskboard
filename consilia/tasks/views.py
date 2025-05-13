@@ -1,8 +1,10 @@
+import json
 from datetime import datetime
 
 from django.forms import inlineformset_factory
-from django.http import HttpResponse
+from django.http import HttpResponse, JsonResponse
 from django.shortcuts import render, redirect, get_object_or_404
+from django.views.decorators.csrf import csrf_exempt
 
 from .forms import TaskForm, SubtaskForm
 from .models import Tasks, Subtasks
@@ -91,9 +93,14 @@ def delete_task(request, pk):
         return render(request, 'tasks/delete_task.html', {'task': task})
 
 
-def change_status(pk):
-    task = get_object_or_404(Tasks, pk=pk)
-    if task.status < 2:
-        task.status += 1
-        return redirect('index')
+@csrf_exempt
+def change_status(request, pk):
+    if request.method == 'POST':
+        data = json.loads(request.body)
+        new_status = data.get('status')
+        task = get_object_or_404(Tasks, pk=pk)
+        task.status = new_status
+        task.save()
+        return JsonResponse({'success': True})
+    return JsonResponse({'success': False}, status=400)
 

@@ -7,32 +7,129 @@
         <div class="date-box">🗓️{{ date }}</div>
 
         <div class="columns">
-            <div class="column">
+        {% csrf_token %}
+            <div class="column" data-status="0"
+                 ondragover="event.preventDefault()"
+                 ondrop="drop(event)">
                 <h2>🛤️ To Do</h2>
+            <div class="task-list">
                 {% for task in to_do %}
-                    <ul>
-                        <li><a href="{% url 'task_details' pk=task.pk %}">{{ task.title }}</a></li>
-                    </ul>
+                    <div class="task-card" draggable="true" data-task-id="{{ task.pk }}">
+                        <a href="{% url 'task_details' pk=task.pk %}">📋 {{ task.title }}</a>
+                    </div>
+
                     {% endfor %}
             </div>
-            <div class="column">
+            </div>
+            <div class="column" data-status="1"
+                 ondragover="event.preventDefault()"
+                 ondrop="drop(event)">
                 <h2>🎢 In progress</h2>
+            <div class="task-list">
                 {% for task in in_progress %}
-                    <ul>
-                        <li><a href="{% url 'task_details' pk=task.pk %}">{{ task.title }}</a></li>
-                    </ul>
+                    <div class="task-card" draggable="true" data-task-id="{{ task.pk }}">
+                        <a href="{% url 'task_details' pk=task.pk %}">📋 {{ task.title }}</a>
+                    </div>
                     {% endfor %}
             </div>
-            <div class="column">
+            </div>
+            <div class="column" data-status="2"
+                 ondragover="event.preventDefault()"
+                 ondrop="drop(event)">
                 <h2>🚀 Done</h2>
+            <div class="task-list">
                 {% for task in done %}
-                    <ul>
-                        <li><a href="{% url 'task_details' pk=task.pk %}">{{ task.title }}</a></li>
-                    </ul>
+                    <div class="task-card" draggable="true" data-task-id="{{ task.pk }}">
+                        <a href="{% url 'task_details' pk=task.pk %}">📋 {{ task.title }}</a>
+                    </div>
                     {% endfor %}
+            </div>
             </div>
         </div>
 
         <a href="{% url 'add_task' %}" class="add-task">➕ Add Task</a>
     </section>
+
+    <script>
+
+
+    function getCookie(name) {
+    let cookieValue = null;
+    if (document.cookie && document.cookie !== '') {
+        const cookies = document.cookie.split(';');
+        for (let i = 0; i < cookies.length; i++) {
+            const cookie = cookies[i].trim();
+            if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                break;
+            }
+        }
+    }
+    return cookieValue;
+
+
+}
+
+
+function drop(event) {
+  event.preventDefault();
+  const taskId = event.dataTransfer.getData("text/plain");
+  const task = document.querySelector(`[data-task-id='${taskId}']`);
+  const list = event.currentTarget;
+  const newStatus = parseInt(list.closest('.column').dataset.status);
+
+  list.appendChild(task);
+  updateTaskStatus(taskId, newStatus);
+}
+
+    // 1. Начало перетаскивания
+document.querySelectorAll('.task-card').forEach(card => {
+  card.addEventListener('dragstart', (e) => {
+      card.classList.add('dragging');
+    e.dataTransfer.setData('taskId', card.dataset.taskId);
+  });
+      card.addEventListener('dragend', () => {
+      card.classList.remove('dragging');
+});
+ });
+// 2. Разрешить перетаскивание в колонку
+document.querySelectorAll('.column').forEach(list => {
+  list.addEventListener('dragover', (e) => {
+
+    e.preventDefault();
+    list.classList.add("drag-over");
+  });
+
+    list.addEventListener('dragleave', () => {
+    list.classList.remove("drag-over");
+  });
+
+  list.addEventListener('drop', (e) => {
+    e.preventDefault();
+    list.classList.remove("drag-over");
+
+    const taskId = e.dataTransfer.getData('taskId');
+
+    const newStatus = parseInt(list.dataset.status);
+
+
+    const taskCard = document.querySelector(`.task-card[data-task-id="${taskId}"]`);
+    list.appendChild(taskCard); // переместили задачу в новую колонку
+
+    // обновим статус на сервере
+    fetch(`/tasks/${taskId}/change_status/`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-CSRFToken': getCookie('csrftoken')  // если у тебя Django
+      },
+      body: JSON.stringify({ status: newStatus })
+    });
+  });
+});
+
+</script>
+
     {% endblock %}
+
+
