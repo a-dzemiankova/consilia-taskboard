@@ -1,0 +1,19 @@
+{% extends 'base.html' %}
+{% load static %}
+
+
+{% block content %}
+<h1>404 — страница не найдена</h1>
+<img id="error-image" class="animated-image" src="{% static 'tasks/images/okak.jpg' %}" alt="Страница не найдена">
+
+
+{#    <script>#}
+{#  window.addEventListener('DOMContentLoaded', function () {#}
+{#    const image = document.getElementById('error-image');#}
+{#    setTimeout(() => {#}
+{#      image.classList.add('show');#}
+{#    }, 100); // небольшая задержка для плавности#}
+{#  });#}
+{#</script>#}
+
+{% endblock %}

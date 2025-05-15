@@ -11,3 +11,4 @@ urlpatterns = [
     path('tasks/<int:pk>/change_status/', views.change_status, name='change_status'),
 
 ]
+

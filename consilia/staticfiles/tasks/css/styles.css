@@ -157,13 +157,4 @@ a:hover {
   background-color: rgba(0, 0, 0, 0.05);
   border: 2px dashed #aaa;
 }
-/*.animated-image {*/
-/*    opacity: 0;*/
-/*    transform: translateY(100px); !* сдвиг вниз *!*/
-/*    transition: all 1s ease-in-out;*/
-/*  }*/
 
-/*.animated-image.show {*/
-/*    opacity: 1;*/
-/*    transform: translateY(0);*/
-/*  }*/

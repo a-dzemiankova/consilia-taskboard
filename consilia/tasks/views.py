@@ -2,12 +2,13 @@ import json
 from datetime import datetime
 
 from django.forms import inlineformset_factory
-from django.http import HttpResponse, JsonResponse
+from django.http import HttpResponse, JsonResponse, HttpResponseNotFound
 from django.shortcuts import render, redirect, get_object_or_404
 from django.views.decorators.csrf import csrf_exempt
 
 from .forms import TaskForm, SubtaskForm
 from .models import Tasks, Subtasks
+
 
 def get_data():
     to_do = Tasks.objects.filter(status=Tasks.Status.TODO)
@@ -16,6 +17,13 @@ def get_data():
     date = datetime.today().strftime('%d.%m.%Y')
     data = {'to_do': to_do, 'in_progress': in_progress, 'done': done, 'date': date}
     return data
+
+
+def page_not_found(request, exception):
+    try:
+        return render(request, 'tasks/404.html')
+    except Exception as e:
+        return HttpResponse(f'Ошибка в обработчике 404: {e}', status=500)
 
 
 def index(request):
