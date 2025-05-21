@@ -1,0 +1,68 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+    <blockquote style="text-align: right; font-style: italic">
+        "The key is not to prioritize what's on your schedule, but to schedule your priorities." – Stephen Covey
+    </blockquote>
+    <blockquote style="text-align: right; font-style: italic">
+        "Don't judge me. It works. I’m as surprised as you are." – Anastasia Demenkova
+    </blockquote>
+    <br>
+<h3 style="text-align: left;">👋Welcome to the world of careful planning and great achievements. Please <a href="{% url 'users:login' %}">log in</a>
+or <a href="{% url 'users:register' %}" >register</a>
+</h3>
+<div class="center-wrapper">
+<div class="preview-section">
+    <figure class="image-block">
+  <img src="{% static 'tasks/images/taskboard_preview.png' %}" alt="Taskboard preview" width="800" draggable="false">
+  <figcaption style="text-align: center">Taskboard preview</figcaption>
+</figure>
+
+    <div class="reasons">
+    <h3>Why Consilia?</h3>
+    <ul>
+      <li>Clean and intuitive interface</li>
+      <li>Easy task organization system and drag-and-drop</li>
+      <li>Free to use, forever</li>
+      <li>Made with love❤️</li>
+    </ul>
+  </div>
+
+</div>
+
+</div>
+<p>🤨Still in doubt? Consider <a href="#" class="open-popup" onclick="openPopup()">this</a></p>
+
+<div id="popup" class="popup-overlay">
+  <div class="popup-content">
+    <img src="{% static 'tasks/images/doubt.jpg' %}" alt="Preview">
+      <p>Please join Consilia...</p>
+    <div class="close-popup" onclick="closePopup()">← Go back</div>
+  </div>
+</div>
+
+<script>
+  function openPopup() {
+    document.getElementById("popup").classList.add("active");
+  }
+
+  function closePopup() {
+    document.getElementById("popup").classList.remove("active");
+  }
+
+  // Закрыть при клике вне содержимого
+  document.addEventListener("DOMContentLoaded", function () {
+    const popup = document.getElementById("popup");
+    const content = popup.querySelector(".popup-content");
+
+    popup.addEventListener("click", function (event) {
+      if (!content.contains(event.target)) {
+        closePopup();
+      }
+    });
+  });
+</script>
+
+
+{% endblock %}

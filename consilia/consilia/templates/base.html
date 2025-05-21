@@ -15,13 +15,31 @@
   <div class="page-container">
  <header>
         <div class="site-name">
-          <a href="{% url 'index' %}" class="logo-link">
-            <img src="{% static 'tasks/images/icon-removebg.png' %}" alt="Logo" class="logo">
+          <a href="{% url 'index' %}" class="logo-link" draggable="false">
+            <img src="{% static 'tasks/images/icon-removebg.png' %}" alt="Logo" class="logo" draggable="false">
           </a>
           <span class="slogan">Consilia – your masterplan, one task at a time</span>
+
         </div>
 
-        <a href="#" class="logout">log out</a>
+     {% if user.is_authenticated %}
+         <div class="greeting">🙋 Hello, {{ user.username }}!</div>
+    <form method="post" action="{% url 'users:logout' %}" style="display: inline;">
+        {% csrf_token %}
+        <button type="submit" class="logout">
+            Log out
+        </button>
+    </form>
+     {% else %}
+     <div class="login">
+        <a href="{% url 'users:login' %}">Log in</a>
+    </div>
+
+     <div class="register">
+        <a href="{% url 'users:register' %}">Register</a>
+    </div>
+    {% endif %}
+
     </header>
 
     <main class="content">

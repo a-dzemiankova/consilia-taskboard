@@ -4,7 +4,11 @@
 
 <p><strong>✏️{{ task.title  }}</strong></p>
     <br>
-<p>📋{{ task.content }}</p>
+    {% if task.content %}
+        <p>📋 {{ task.content }}</p>
+    {% else %}
+        <p style="font-style: italic;"> No additional details... </p>
+    {% endif %}
     <br>
     {% if subtasks %}
         <p>📌Details:</p>

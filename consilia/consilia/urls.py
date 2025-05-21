@@ -28,6 +28,7 @@ handler404 = page_not_found
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('tasks.urls')),
+    path('users/', include('users.urls', namespace='users')),
 ]
 
 # Для локальной раздачи статики при DEBUG=False

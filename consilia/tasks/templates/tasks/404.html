@@ -3,8 +3,9 @@
 
 
 {% block content %}
-<h1>404 — страница не найдена</h1>
+<h1>404 — page not found</h1>
 <img id="error-image" class="animated-image" src="{% static 'tasks/images/okak.jpg' %}" alt="Страница не найдена">
+    <p><a href="{% url 'index' %}">Go to mainpage</a></p>
 
 
 {#    <script>#}

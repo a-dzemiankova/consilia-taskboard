@@ -1,6 +1,8 @@
 import json
 from datetime import datetime
 
+from django.contrib.auth.decorators import login_required
+from django.db.models import Q
 from django.forms import inlineformset_factory
 from django.http import HttpResponse, JsonResponse, HttpResponseNotFound
 from django.shortcuts import render, redirect, get_object_or_404
@@ -10,26 +12,32 @@ from .forms import TaskForm, SubtaskForm
 from .models import Tasks, Subtasks
 
 
-def get_data():
-    to_do = Tasks.objects.filter(status=Tasks.Status.TODO)
-    in_progress = Tasks.objects.filter(status=Tasks.Status.IN_PROGRESS)
-    done = Tasks.objects.filter(status=Tasks.Status.DONE)
-    date = datetime.today().strftime('%d.%m.%Y')
-    data = {'to_do': to_do, 'in_progress': in_progress, 'done': done, 'date': date}
-    return data
+# def get_data():
+#     to_do = Tasks.objects.filter(status=Tasks.Status.TODO)
+#     in_progress = Tasks.objects.filter(status=Tasks.Status.IN_PROGRESS)
+#     done = Tasks.objects.filter(status=Tasks.Status.DONE)
+#     date = datetime.today().strftime('%d.%m.%Y')
+#     data = {'to_do': to_do, 'in_progress': in_progress, 'done': done, 'date': date}
+#     return data
 
 
 def page_not_found(request, exception):
-    try:
-        return render(request, 'tasks/404.html')
-    except Exception as e:
-        return HttpResponse(f'Ошибка в обработчике 404: {e}', status=500)
+    return render(request, 'tasks/404.html')
 
 
 def index(request):
-    return render(request, 'tasks/index.html', context=get_data())
+    if request.user.is_authenticated:
+        to_do = Tasks.objects.filter(Q(status=Tasks.Status.TODO) & Q(owner=request.user))
+        in_progress = Tasks.objects.filter(Q(status=Tasks.Status.IN_PROGRESS) & Q(owner=request.user))
+        done = Tasks.objects.filter(Q(status=Tasks.Status.DONE) & Q(owner=request.user))
+        date = datetime.today().strftime('%d.%m.%Y')
+        data = {'to_do': to_do, 'in_progress': in_progress, 'done': done, 'date': date}
+        return render(request, 'tasks/index.html', context=data)
+    else:
+        return render(request, 'tasks/index_no_user.html')
 
 
+@login_required
 def add_task(request):
     SubtaskFormSet = inlineformset_factory(
         Tasks, Subtasks,
@@ -41,6 +49,7 @@ def add_task(request):
         form = TaskForm(request.POST)
         if form.is_valid():
             task = form.save(commit=False)  # ещё не сохраняем сабтаски
+            task.owner = request.user
             formset = SubtaskFormSet(request.POST, instance=task)
             if formset.is_valid():
                 task.save()  # сохраняем только после того, как formset валиден
@@ -60,45 +69,57 @@ def add_task(request):
     return render(request, 'tasks/add_task.html', {'form': form, 'formset': formset})
 
 
+@login_required
 def task_details(request, pk):
     task = Tasks.objects.get(pk=pk)
     subtasks = Subtasks.objects.filter(task=task.id)
-    return render(request, 'tasks/task_details.html', context={'task': task, 'subtasks': subtasks})
+    if task.owner == request.user:
+        return render(request, 'tasks/task_details.html', context={'task': task, 'subtasks': subtasks})
+    else:
+        return render(request, 'tasks/404.html')
 
 
+@login_required
 def edit_task(request, pk):
     task = get_object_or_404(Tasks, pk=pk)
-    SubtaskFormSet = inlineformset_factory(
-        Tasks, Subtasks,
-        form=SubtaskForm,
-        extra=0,
-        can_delete=True
-    )
+    if task.owner == request.user:
+        SubtaskFormSet = inlineformset_factory(
+            Tasks, Subtasks,
+            form=SubtaskForm,
+            extra=0,
+            can_delete=True
+        )
 
-    if request.method == 'POST':
-        form = TaskForm(request.POST, instance=task)
-        formset = SubtaskFormSet(request.POST, instance=task)
-        if form.is_valid() and formset.is_valid():
-            form.save()
-            formset.save()
-            return redirect('task_details', pk=task.pk)
+        if request.method == 'POST':
+            form = TaskForm(request.POST, instance=task)
+            formset = SubtaskFormSet(request.POST, instance=task)
+            if form.is_valid() and formset.is_valid():
+                form.save()
+                formset.save()
+                return redirect('task_details', pk=task.pk)
+            else:
+                print('something is wrong')
+                print(f"form:{form.errors}, formset:{formset.errors}")
+
         else:
-            print('something is wrong')
-            print(f"form:{form.errors}, formset:{formset.errors}")
-
+            form = TaskForm(instance=task)
+            formset = SubtaskFormSet(instance=task)
+        return render(request, 'tasks/add_task.html', {'form': form, 'task': task, 'formset': formset})
     else:
-        form = TaskForm(instance=task)
-        formset = SubtaskFormSet(instance=task)
-    return render(request, 'tasks/add_task.html', {'form': form, 'task': task, 'formset': formset})
+        return render(request, 'tasks/404.html')
 
 
+@login_required
 def delete_task(request, pk):
     task = get_object_or_404(Tasks, pk=pk)
-    if request.method == 'POST':
-        task.delete()
-        return redirect('index')
+    if task.owner == request.user:
+        if request.method == 'POST':
+            task.delete()
+            return redirect('index')
+        else:
+            return render(request, 'tasks/delete_task.html', {'task': task})
     else:
-        return render(request, 'tasks/delete_task.html', {'task': task})
+        return render(request, 'tasks/404.html')
 
 
 @csrf_exempt

@@ -1,3 +1,4 @@
+from django.contrib.auth import get_user_model
 from django.db import models
 
 
@@ -12,6 +13,8 @@ class Tasks(models.Model):
     status = models.IntegerField(choices=Status)
     time_create = models.DateTimeField(auto_now_add=True)
     time_update = models.DateTimeField(auto_now=True)
+    owner = models.ForeignKey(get_user_model(), models.SET_NULL, related_name='tasks', null=True, default=None,
+                               blank=True)
 
 
 class Subtasks(models.Model):
