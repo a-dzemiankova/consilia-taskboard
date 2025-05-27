@@ -23,7 +23,13 @@
         </div>
 
      {% if user.is_authenticated %}
-         <div class="greeting">🙋 Hello, {{ user.username }}!</div>
+{#             <form method="post" action="{% url 'users:profile' %}" style="display: inline;">#}
+{#        {% csrf_token %}#}
+{#        <button type="submit" class="greeting">#}
+{#            🙋 Hello, {{ user.username }}!#}
+{#        </button>#}
+{#    </form>#}
+         <div class="greeting"><a href="{% url 'users:profile' %}">🙋 Hello, {{ user.username }}!</a> </div>
     <form method="post" action="{% url 'users:logout' %}" style="display: inline;">
         {% csrf_token %}
         <button type="submit" class="logout">

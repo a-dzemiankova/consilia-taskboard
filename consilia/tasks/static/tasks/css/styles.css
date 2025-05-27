@@ -105,7 +105,7 @@ header {
     border-radius: 4px;
     font-family: Arial, sans-serif;
     font-size: 15px;
-    cursor: default;
+    cursor: pointer;
     color: #333;
 }
 
