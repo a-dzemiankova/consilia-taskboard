@@ -7,9 +7,9 @@
     {% csrf_token %}
 
     {% if user.photo %}
-    <p><img src="{{ user.photo.url }}"></p>
+    <p><img src="{{ user.photo.url }}" draggable="false"></p>
     {% else %}
-    <p><img src="{{ default_image }}" width="100"></p>
+    <p><img src="{{ default_image }}" width="100" draggable="false"></p>
     {% endif %}
 
     <div class="form-error">{{ form.non_field_errors }}</div>
@@ -22,6 +22,6 @@
 </form>
 
 <hr>
-<p><a href="#">Change password</a></p>
+<p><a href="{% url 'users:password_change' %}">Change password</a></p>
 
 {% endblock %}
