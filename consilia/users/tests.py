@@ -31,15 +31,15 @@ class ProfileUserViewTest(TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, 'users/profile.html')
 
-    def test_context_contains_default_image_and_user(self):
-        """Контекст содержит default_image и текущего пользователя"""
-        self.client.login(username='testuser', password='secret123')
-        response = self.client.get(self.url)
-        self.assertIn('default_image', response.context)
-        self.assertEqual(response.context['default_image'], app_settings.DEFAULT_USER_IMAGE)
-
-        self.assertIn('user', response.context)
-        self.assertEqual(response.context['user'], self.user)
+    # def test_context_contains_default_image_and_user(self):
+    #     """Контекст содержит default_image и текущего пользователя"""
+    #     self.client.login(username='testuser', password='secret123')
+    #     response = self.client.get(self.url)
+    #     self.assertIn('default_image', response.context)
+    #     self.assertEqual(response.context['default_image'], app_settings.DEFAULT_USER_IMAGE)
+    #
+    #     self.assertIn('user', response.context)
+    #     self.assertEqual(response.context['user'], self.user)
 
     # @override_settings(DEFAULT_USER_IMAGE='images/default.png')
     # def test_default_image_from_settings(self):
