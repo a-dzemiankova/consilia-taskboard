@@ -1,7 +1,6 @@
 from django import forms
 from django.contrib.auth import get_user_model
 from django.contrib.auth.forms import AuthenticationForm, UserCreationForm, PasswordChangeForm
-from datetime import datetime
 
 
 class LoginUserForm(AuthenticationForm):
@@ -35,9 +34,6 @@ class RegisterUserForm(UserCreationForm):
         user.email = self.cleaned_data['email']
         user.first_name = self.cleaned_data['first_name']
         user.last_name = self.cleaned_data['last_name']
-        print(user.first_name)
-        print(user.last_name)
-        print(self.cleaned_data)
         if commit:
             user.save()
         return user
