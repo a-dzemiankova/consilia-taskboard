@@ -33,7 +33,7 @@ class ProfileUser(LoginRequiredMixin, UpdateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['default_image'] = settings.DEFAULT_USER_IMAGE
-        context['user'] = self.request.user  # 👈 добавим user явно
+        context['user'] = self.request.user
         return context
 
     def get_success_url(self):
