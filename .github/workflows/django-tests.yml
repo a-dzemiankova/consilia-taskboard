@@ -2,9 +2,9 @@ name: Django CI
 
 on:
   push:
-    branches: [ master]
+    branches: [master]
   pull_request:
-    branches: [ master ]
+    branches: [master]
 
 jobs:
   test:
@@ -29,3 +29,8 @@ jobs:
       working-directory: ./consilia
       run: |
         python manage.py test
+
+    - name: Linting
+      working-directory:  ./consilia
+      run: |
+        pre-commit run -a
