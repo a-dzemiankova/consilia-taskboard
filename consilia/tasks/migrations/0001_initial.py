@@ -7,27 +7,47 @@ class Migration(migrations.Migration):
 
     initial = True
 
-    dependencies = [
-    ]
+    dependencies = []
 
     operations = [
         migrations.CreateModel(
-            name='Subtasks',
+            name="Subtasks",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('description', models.CharField(max_length=255)),
-                ('is_done', models.BooleanField(default=False)),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("description", models.CharField(max_length=255)),
+                ("is_done", models.BooleanField(default=False)),
             ],
         ),
         migrations.CreateModel(
-            name='Tasks',
+            name="Tasks",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('title', models.CharField(max_length=255)),
-                ('content', models.TextField(blank=True)),
-                ('status', models.IntegerField(choices=[(0, 'To do'), (1, 'In progress'), (2, 'Done')])),
-                ('time_create', models.DateTimeField(auto_now_add=True)),
-                ('time_update', models.DateTimeField(auto_now=True)),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("title", models.CharField(max_length=255)),
+                ("content", models.TextField(blank=True)),
+                (
+                    "status",
+                    models.IntegerField(
+                        choices=[(0, "To do"), (1, "In progress"), (2, "Done")],
+                    ),
+                ),
+                ("time_create", models.DateTimeField(auto_now_add=True)),
+                ("time_update", models.DateTimeField(auto_now=True)),
             ],
         ),
     ]

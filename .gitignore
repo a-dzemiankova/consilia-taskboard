@@ -3,3 +3,4 @@ consilia/db.sqlite3
 venv/
 .idea/
 tmp.env
+.*cache
