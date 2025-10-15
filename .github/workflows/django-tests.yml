@@ -31,6 +31,6 @@ jobs:
         python manage.py test
 
     - name: Linting
-      working-directory:  ./consilia
+      working-directory: ./consilia
       run: |
         pre-commit run -a
