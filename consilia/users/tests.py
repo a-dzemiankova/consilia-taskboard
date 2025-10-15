@@ -1,10 +1,8 @@
 # users/tests.py
-import pdb
 
-from django.test import TestCase, override_settings
+from django.test import TestCase
 from django.urls import reverse
 from django.contrib.auth import get_user_model
-from django.conf import settings
 
 User = get_user_model()
 
@@ -13,23 +11,23 @@ class ProfileUserViewTest(TestCase):
     def setUp(self):
         # Создаём пользователя для тестов
         self.user = User.objects.create_user(
-            username='testuser',
-            email='test@example.com',
-            password='secret123'
+            username="testuser",
+            email="test@example.com",
+            password="secret123",
         )
-        self.url = reverse('users:profile')  # ← убедитесь, что имя URL именно такое!
+        self.url = reverse("users:profile")  # ← убедитесь, что имя URL именно такое!
 
     def test_login_required(self):
         """Неавторизованный пользователь должен быть перенаправлен на страницу входа"""
         response = self.client.get(self.url)
-        self.assertRedirects(response, f'/accounts/login/?next={self.url}')
+        self.assertRedirects(response, f"/accounts/login/?next={self.url}")
 
     def test_profile_page_loads_for_authenticated_user(self):
         """Авторизованный пользователь видит страницу профиля"""
-        self.client.login(username='testuser', password='secret123')
+        self.client.login(username="testuser", password="secret123")
         response = self.client.get(self.url)
         self.assertEqual(response.status_code, 200)
-        self.assertTemplateUsed(response, 'users/profile.html')
+        self.assertTemplateUsed(response, "users/profile.html")
 
     # def test_context_contains_default_image_and_user(self):
     #     """Контекст содержит default_image и текущего пользователя"""
@@ -50,10 +48,10 @@ class ProfileUserViewTest(TestCase):
 
     def test_get_object_returns_current_user(self):
         """Метод get_object() возвращает текущего пользователя"""
-        self.client.login(username='testuser', password='secret123')
+        self.client.login(username="testuser", password="secret123")
         response = self.client.get(self.url)
         # Форма должна быть привязана к текущему пользователю
-        self.assertEqual(response.context['form'].instance, self.user)
+        self.assertEqual(response.context["form"].instance, self.user)
 
     # def test_successful_form_update(self):
     #     """Успешное обновление профиля перенаправляет на index"""

@@ -1,0 +1,67 @@
+# See https://pre-commit.com for more information
+# See https://pre-commit.com/hooks.html for more hooks
+
+.fail-fast: &fail-fast
+  fail_fast: true
+
+.python-linters: &python-linters
+  <<: *fail-fast
+  pass_filenames: false
+  language: system
+  types: [python]
+
+
+repos:
+- repo: https://github.com/pre-commit/pre-commit-hooks
+  rev: v4.5.0
+  hooks:
+  - id: check-ast
+    <<: *fail-fast
+  - id: trailing-whitespace
+    <<: *fail-fast
+  - id: check-toml
+    <<: *fail-fast
+  - id: end-of-file-fixer
+    <<: *fail-fast
+
+- repo: https://github.com/asottile/add-trailing-comma
+  rev: v3.1.0
+  hooks:
+  - id: add-trailing-comma
+    <<: *fail-fast
+
+- repo: https://github.com/macisamuele/language-formatters-pre-commit-hooks
+  rev: v2.11.0
+  hooks:
+  - id: pretty-format-yaml
+    <<: *fail-fast
+    args:
+    - --autofix
+    - --preserve-quotes
+    - --indent=2
+
+- repo: https://github.com/Lucas-C/pre-commit-hooks
+  rev: v1.5.4
+  hooks:
+  - id: forbid-tabs
+    exclude: ^consilia/staticfiles/
+    <<: *fail-fast
+
+- repo: local
+  hooks:
+  - id: black
+    <<: *python-linters
+    name: Format with Black
+    entry: black
+    args: ["."]
+
+  - id: ruff
+    <<: *python-linters
+    name: Check with ruff
+    entry: ruff
+    args: ["check", "--fix", "."]
+
+#  - id: mypy
+#    <<: *python-linters
+#    name: Validate types with MyPy
+#    entry: mypy
